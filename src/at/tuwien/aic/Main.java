@@ -5,6 +5,8 @@
  */
 package at.tuwien.aic;
 
+import at.tuwien.aic.preprocessing.Stem;
+import at.tuwien.aic.preprocessing.StopWordRemoval;
 import at.tuwien.aic.twitter.TweetCrawler;
 import com.mongodb.util.JSON;
 import java.io.FileInputStream;
@@ -16,6 +18,8 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.tartarus.snowball.ext.englishStemmer;
+import org.tartarus.snowball.ext.porterStemmer;
 
 /**
  *
@@ -64,14 +68,34 @@ public class Main {
 		String action = "";
 
 		do {
-			action = getNonEmptyString("The following actions can be run:\n\t1. Collect Tweets\n\t2. Analyze tweets to a specific topic\n\nWhat action do you want to execute");
-		} while (!action.equals("1") && !action.equals("2"));
-		
+			action = getNonEmptyString("The following actions can be run:\n\t1. Collect Tweets\n\t2. Run stop word removal on a string\n\t3. Run stemming on a string\n\t4. Run both\n\nWhat action do you want to execute");
+		} while (!action.equals("1") && !action.equals("2") && !action.equals("3") && !action.equals("4"));
+
 		if (action.equals("1")) {
 			tc.collectTweets(Integer.parseInt(getNonEmptyString("How many Tweets do you want to collect")));
+		} else if (action.equals("2")) {
+			String text = getNonEmptyString("Enter the text to be StopWordRemoved");
+
+			try {
+				StopWordRemoval swr = new StopWordRemoval("resources/stopwords.txt");
+				System.out.println(swr.processText(text));
+			} catch (IOException ex) {
+				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} else if (action.equals("3")) {
+			String text = getNonEmptyString("Enter the text to be stemmed");
+
+			System.out.println(Stem.stem(text));
+		} else if (action.equals("4")) {
+			String text = getNonEmptyString("Enter the text to be processed");
+
+			try {
+				StopWordRemoval swr = new StopWordRemoval("resources/stopwords.txt");
+				System.out.println(Stem.stem(swr.processText(text)));
+			} catch (IOException ex) {
+				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
-		
-		exit();
 	}
 
 	private static String getNonEmptyString(String msg) {
@@ -82,22 +106,26 @@ public class Main {
 		Scanner scanner = new Scanner(System.in);
 		String ret = defaultValue;
 
-		System.out.print(msg + " [" + ret + "]: ");
+		if (!ret.equals("")) {
+			System.out.print(msg + " [" + ret + "]: ");
+		} else {
+			System.out.print(msg + ": ");
+		}
 
 		while (scanner.hasNextLine()) {
 			ret = scanner.nextLine();
-			
+
 			if (!ret.equals("")) {
 				break;
 			}
-			
+
 			System.out.print(msg + " [" + ret + "]: ");
 		}
 
 		return ret;
 	}
 
-	private static void exit() {
+	public static void exit() {
 		System.out.println("Application is exiting - Goodbye!");
 		System.exit(0);
 	}

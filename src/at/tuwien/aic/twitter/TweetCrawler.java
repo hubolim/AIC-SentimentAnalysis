@@ -1,5 +1,6 @@
 package at.tuwien.aic.twitter;
 
+import at.tuwien.aic.Main;
 import java.net.UnknownHostException;
 
 import twitter4j.StallWarning;
@@ -12,26 +13,21 @@ import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.json.DataObjectFactory;
 
 import com.mongodb.DB;
-import com.mongodb.DBAddress;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import twitter4j.FilterQuery;
 
+/**
+ * A simple Twitter crawler which extracts tweets via Twitterstream and safes
+ * them into a Mongodb.
+ */
 public class TweetCrawler {
 
-	private final Logger logger = Logger.getLogger(TweetCrawler.class.getName());
-	private Mongo mongo;
-	private DB db;
+	private static final Logger logger = Logger.getLogger(TweetCrawler.class.getName());
+	private final Mongo mongo;
+	private final DB db;
 	private final String dbHost, dbName, dbTable, twitter_consumerKey, twitter_consumerSecret, twitter_accessToken, twitter_accessTokenSecret;
 
 	public TweetCrawler(String dbHost, String dbName, String dbTable, String twitter_consumerKey, String twitter_consumerSecret, String twitter_accessToken, String twitter_accessTokenSecret) throws UnknownHostException {
@@ -66,15 +62,22 @@ public class TweetCrawler {
 			int tweetCount = 0;
 
 			@Override
-			public void onStatus(Status status) {
+			public synchronized void onStatus(Status status) {
 				tweetCount++;
 				System.out.println(tweetCount);
+
 				String tweet = DataObjectFactory.getRawJSON(status);
-				System.out.println(tweet);
 				DBObject doc = (DBObject) JSON.parse(tweet);
+
+				if (!doc.get("lang").equals("en")) {
+					return;
+				}
+
 				coll.insert(doc);
+
 				if (tweetCount >= nrToCollect) {
 					twitterStream.shutdown();
+					Main.exit();
 				}
 			}
 
@@ -105,28 +108,8 @@ public class TweetCrawler {
 		};
 
 		twitterStream.addListener(listener);
-		FilterQuery fq = new FilterQuery();
-		fq.language(new String[]{"en"}); //@TODO so wie's ausschaut kann ma ned nur nach der sprache filtern - müss ma sich genauer anschauen
-		twitterStream.filter(fq);
 		// Starting the stream
 		twitterStream.sample();
-	}
-
-	/**
-	 * A simple Twitter crawler which extracts tweets via Twitterstream and
-	 * safes them into a Mongodb.
-	 */
-	public static void main(String[] args) {
-		Mongo m;
-		try {
-			// Database connection
-			m = new Mongo("localhost");
-			DB db = m.getDB("AIC-DB");
-
-			// Twitter connection
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
