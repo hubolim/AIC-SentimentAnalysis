@@ -39,15 +39,11 @@ public class StopWordRemoval {
 	}
 
 	public String processText(String text) {
-		String[] words = text.replaceAll("(?i)^(RT)?(.*)$", "$2").replace("\\n", " ").split("[\\s\\\\\\\"]");
+		String[] words = text.split("[\\s\\\\\\\"]");
 		StringBuilder sb = new StringBuilder();
 		
 		for (String word: words) {
-			if (!word.equals("") && !word.startsWith("http") && !Character.isWhitespace(word.charAt(0)) && !this.dictionary.contains(word)) {
-				if (word.startsWith("@")) {
-					word = "@";
-				}
-				
+			if (!word.equals("") && !this.dictionary.contains(word)) {
 				sb.append(word);
 				sb.append(" ");
 			}
