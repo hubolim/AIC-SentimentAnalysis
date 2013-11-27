@@ -38,7 +38,7 @@ public class Main {
 		}
 
 		try {
-			_prop.load(new InputStreamReader(new FileInputStream("properties.properties")));
+			_prop.load(new InputStreamReader(new FileInputStream("src/properties.properties")));
 		} catch (FileNotFoundException ex) {
 			logger.severe("Could not find the properties file!");
 			exitWithError(1);

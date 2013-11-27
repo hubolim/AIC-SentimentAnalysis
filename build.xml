@@ -9,9 +9,10 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="AIC" default="default" basedir=".">
     <description>Builds, tests, and runs the project AIC.</description>
+	
     <import file="nbproject/build-impl.xml"/>
-    <!--
-
+	
+	<!--
     There exist several targets which are by default empty and which can be 
     used for execution of your tasks. These targets are usually executed 
     before and after some main targets. They are: 
@@ -93,7 +94,7 @@
 	    </zip>
 	
 	    <delete file="${store.dir}/temp_final.jar"/>
-	    <delete dir="${store.dir}/lib"/>
+	    <!--<delete dir="${store.dir}/lib"/>-->
 	    <delete file="${store.dir}/README.TXT"/>
 	</target>
 
