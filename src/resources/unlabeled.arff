@@ -1,0 +1,23 @@
+@relation 'TEST-weka.filters.unsupervised.attribute.Reorder-R2-last,1'
+
+@attribute Text string
+@attribute Sentiment {negative,positive}
+
+@data
+
+'twisted mind tonight. and that\'s all because of Mocca and my baby Q. i am worrying and .',negative
+'@Katyperry I\'m really really really really really .',negative
+'@LolsWtf LOL. really damn . brb creying my eyes out',negative
+'Its really  to see that you don\'t want a better life for yourself',negative
+'&quot;A  place for hopeless old people&quot;... Nursing home... This movie is too much!',negative
+'@JUS_LOVELY87 Amen!!!  but true....I mean I knw everybody get lonely but damn....can you BE anymore obvious?? Lol',negative
+'Now he\'s  sobbing forever poor bb',negative
+'Had a nice day wiv an old friend,  how fings turn out tho..',negative
+'@GemmaCoupland That\'s the reason I don\'t like them,they\'re to mooving and make me , and I don\'t like being  :) xxx',negative
+'Boys Cant Even Take Care Dey Kids But You Can Go Spend Yo Money On Hoes&amp;Bullshyt Lmfao Dats Fckn !',negative
+'Not going to lie, I\'m a little  that Wik candle in Denton is closing for good this weekend.',negative
+'@hs_me @jessie851001 why sia?   ... meaning i saw the correct video that you talking about lor.. with yvonne right ?',negative
+'@1003TheBeat they always try to find a way to get money out of people...smh so ',negative
+'Toddlers burning in creche blaze! #CapeArgus .... This is  :(',negative
+'Ditoo, this show is  :\'(',negative
+'@August_0510 yesss man its ',negative
