@@ -17,14 +17,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import twitter4j.FilterQuery;
 
 /**
  * A simple Twitter crawler which extracts tweets via Twitterstream and safes
@@ -64,37 +57,21 @@ public class TweetCrawler {
 		// Initializing Twitter stream and listener
 		final TwitterStream twitterStream = new TwitterStreamFactory(cb.build())
 				.getInstance();
-		final BufferedWriter wr;
-
-		try {
-			wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("trainingdata.txt")));
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(TweetCrawler.class.getName()).log(Level.SEVERE, null, ex);
-			return;
-		}
 
 		StatusListener listener = new StatusListener() {
 			int tweetCount = 0;
 
 			@Override
 			public synchronized void onStatus(Status status) {
+				tweetCount++;
+				System.out.println(tweetCount);
 
 				String tweet = DataObjectFactory.getRawJSON(status);
 				DBObject doc = (DBObject) JSON.parse(tweet);
 
-//				System.out.println(doc.get("text"));
-//				int read = 0;
-//
-//				try {
-//					read = System.in.read();
-//					wr.write(read + ";" + doc.get("text"));
-//					wr.flush();
-//				} catch (IOException ex) {
-//					Logger.getLogger(TweetCrawler.class.getName()).log(Level.SEVERE, null, ex);
-//				}
-
-				tweetCount++;
-				System.out.println(tweetCount);
+				if (!doc.get("lang").equals("en")) {
+					return;
+				}
 
 				coll.insert(doc);
 
@@ -131,10 +108,6 @@ public class TweetCrawler {
 		};
 
 		twitterStream.addListener(listener);
-//		FilterQuery filterQuery = new FilterQuery();
-//		filterQuery.language(new String[]{"en"});
-//		filterQuery.track(new String[]{"google"});
-//		twitterStream.filter(filterQuery);
 		// Starting the stream
 		twitterStream.sample();
 	}
