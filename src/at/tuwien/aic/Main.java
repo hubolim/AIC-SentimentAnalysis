@@ -273,8 +273,7 @@ public class Main {
 					tweetPosUserScore += score;
 				} else {
 					tweetNegUserScore += score;
-				}
-
+				}		
 				++count;
 			} catch (NumberFormatException ex) {
 				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -284,7 +283,8 @@ public class Main {
 				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-
-		System.out.println("This topic has a sentiment value of: " + value / count);
+		// Normalizing between 0 an 1
+		value = tweetPosUserScore / (tweetPosUserScore + tweetNegUserScore);
+		System.out.println("This topic has a sentiment value of: " + value);
 	}
 }
