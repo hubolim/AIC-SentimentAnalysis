@@ -58,7 +58,7 @@ public class Main {
 		}
 
 		try {
-			_prop.load(new InputStreamReader(new FileInputStream("src/properties.properties")));
+			_prop.load(new InputStreamReader(new FileInputStream("properties.properties")));
 		} catch (FileNotFoundException ex) {
 			logger.severe("Could not find the properties file!");
 			exitWithError(1);
@@ -248,33 +248,33 @@ public class Main {
 
 		Classifier c = ClassifyTweet.loadModel("resources/classifier.model");
 		TweetScorer scorer = new TweetScorer();
-		
+
 		DBCollection tweetCollection = db.getCollection("tweets");
 
 		Pattern pattern = Pattern.compile("^.+" + topic + ".+$");
 		DBObject query = QueryBuilder.start("text").regex(pattern).get();
 		DBCursor resultSet = tweetCollection.find(query);
-		
+
 		int count = 0;
 		double value = 0;
-		
+		double tweetClassifiedScore = 0;
+		double tweetPosUserScore = 0;
+		double tweetNegUserScore = 0;
+
 		while (resultSet.hasNext()) {
 			try {
 				DBObject obj = resultSet.next();
 				String tweetText = (String) obj.get("text");
-				
-				double tweetClassifiedScore = ClassifyTweet.classifyTweet(c, tweetText);
-				
-				double tweetUserScore = scorer.scoreTweet(obj);
-				
-				value += tweetClassifiedScore * tweetUserScore;
-				
+
+				tweetClassifiedScore += ClassifyTweet.classifyTweet(c, tweetText);
+				double score = scorer.scoreTweet(obj);
+
 				if (tweetClassifiedScore > 0) {
-					System.out.println("tweet:			" + tweetText);
-					System.out.println("tweetScore:		" + tweetClassifiedScore);
-					System.out.println("tweetUserScore: " + tweetUserScore);
+					tweetPosUserScore += score;
+				} else {
+					tweetNegUserScore += score;
 				}
-				
+
 				++count;
 			} catch (NumberFormatException ex) {
 				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -284,7 +284,7 @@ public class Main {
 				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		
+
 		System.out.println("This topic has a sentiment value of: " + value / count);
 	}
 }
