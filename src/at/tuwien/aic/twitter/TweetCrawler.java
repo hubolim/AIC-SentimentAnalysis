@@ -18,6 +18,7 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.util.JSON;
 import java.util.logging.Logger;
+import twitter4j.FilterQuery;
 
 /**
  * A simple Twitter crawler which extracts tweets via Twitterstream and safes
@@ -29,6 +30,7 @@ public class TweetCrawler {
 	private final Mongo mongo;
 	private final DB db;
 	private final String dbHost, dbName, dbTable, twitter_consumerKey, twitter_consumerSecret, twitter_accessToken, twitter_accessTokenSecret;
+	private TwitterStream twitterStream;
 
 	public TweetCrawler(String dbHost, String dbName, String dbTable, String twitter_consumerKey, String twitter_consumerSecret, String twitter_accessToken, String twitter_accessTokenSecret) throws UnknownHostException {
 		this.dbHost = dbHost;
@@ -43,7 +45,12 @@ public class TweetCrawler {
 		this.db = mongo.getDB(dbName);
 	}
 
-	public void collectTweets(final int nrToCollect) {
+	/**
+	 * Handles the collection of tweets
+	 *
+	 * @param keywords For which keywords should the tweets be limited to
+	 */
+	public void collectTweets(String... keywords) {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true).setOAuthConsumerKey("JJGOaJEwbCVM2gaSHgUXA")
 				.setOAuthConsumerSecret("JGfdFmhEwa7237EEe0c4lDPchZxfH6h5H21gmeA7E")
@@ -52,10 +59,10 @@ public class TweetCrawler {
 				.setJSONStoreEnabled(true);
 
 		// Database collection
-		final DBCollection coll = db.getCollection("tweets");
+		final DBCollection coll = db.getCollection(dbTable);
 
 		// Initializing Twitter stream and listener
-		final TwitterStream twitterStream = new TwitterStreamFactory(cb.build())
+		twitterStream = new TwitterStreamFactory(cb.build())
 				.getInstance();
 
 		StatusListener listener = new StatusListener() {
@@ -63,8 +70,6 @@ public class TweetCrawler {
 
 			@Override
 			public synchronized void onStatus(Status status) {
-				tweetCount++;
-				System.out.println(tweetCount);
 
 				String tweet = DataObjectFactory.getRawJSON(status);
 				DBObject doc = (DBObject) JSON.parse(tweet);
@@ -72,13 +77,11 @@ public class TweetCrawler {
 				if (!doc.get("lang").equals("en")) {
 					return;
 				}
+				
+				tweetCount++;
+				System.out.println(tweetCount);
 
 				coll.insert(doc);
-
-				if (tweetCount >= nrToCollect) {
-					twitterStream.shutdown();
-					Main.exit();
-				}
 			}
 
 			@Override
@@ -107,9 +110,30 @@ public class TweetCrawler {
 			}
 		};
 
+		/*
+		 * Attach the listener --> this ensures that the onStatus method gets
+		 * called when a tweet is downloaded
+		 */
 		twitterStream.addListener(listener);
-		// Starting the stream
-		twitterStream.sample();
+
+		if (keywords != null && keywords.length > 0) {
+			FilterQuery fq = new FilterQuery();
+			fq.track(keywords);
+			fq.language(new String[] { "en" });
+
+			/*
+			 * Start the filtered download --> the downloaded tweets will only
+			 * contain tweets with the keywords in it
+			 */
+			twitterStream.filter(fq);
+		} else {
+			// Start downloading all kinds of tweets (random)
+			twitterStream.sample();
+		}
+	}
+	
+	public void stopCollecting() {
+		twitterStream.cleanUp();
 	}
 
 }

@@ -18,10 +18,6 @@ import twitter4j.internal.org.json.JSONObject;
  */
 public class TweetScorer {
 
-	public TweetScorer() {
-
-	}
-
 	/**
 	 * Calculates a weighting score for a tweet, ranges between 0 an 1
 	 * 
@@ -64,7 +60,7 @@ public class TweetScorer {
 		Iterator<?> keys = jo.keys();
 		while (keys.hasNext()) {
 			String key = (String) keys.next();
-			System.out.println("Key: " + key + " , Data: " + jo.getString(key));
+//			System.out.println("Key: " + key + " , Data: " + jo.getString(key));
 			if (key.equals("retweet_count")) {
 				retweet_count = Double.parseDouble(jo.getString(key));
 			} else if (key.equals("favorite_count")) {
@@ -75,8 +71,8 @@ public class TweetScorer {
 					Iterator<?> keys_2 = jo_2.keys();
 					while (keys_2.hasNext()) {
 						String key_2 = (String) keys_2.next();
-						System.out.println("  Key: " + key_2 + " , Data: "
-								+ jo_2.getString(key_2));
+//						System.out.println("  Key: " + key_2 + " , Data: "
+//								+ jo_2.getString(key_2));
 						if (key_2.equals("favourites_count")) {
 							favourites_count = Double.parseDouble(jo_2
 									.getString(key_2));
@@ -102,7 +98,7 @@ public class TweetScorer {
 		// Saves the maximum data values of all tweets which used this method
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(new FileInputStream(new File(
-						"src/resources/tweetlevel_learning.txt"))));
+						"resources/tweetlevel_learning.txt"))));
 		String line;
 		// Maximum data values of all tweets which used this method
 		double max_favourites_count = 1.0;
@@ -164,9 +160,7 @@ public class TweetScorer {
 		double tweetScore = (retweet_count / max_retweet_count * 0.34)
 				+ (favorite_count / max_favorite_count * 0.33);
 
-		System.out.println(followers_count);
-		PrintWriter writer = new PrintWriter(
-				"src/resources/tweetlevel_learning.txt", "UTF-8");
+		PrintWriter writer = new PrintWriter("resources/tweetlevel_learning.txt", "UTF-8");
 		writer.println(max_favourites_count);
 		writer.println(max_followers_count);
 		writer.println(max_friends_count);
@@ -176,6 +170,6 @@ public class TweetScorer {
 		writer.println(max_favorite_count);
 		writer.close();
 
-		return userScore + tweetScore;
+		return (userScore + tweetScore) / 2;
 	}
 }

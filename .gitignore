@@ -6,3 +6,5 @@
 *.war
 *.ear
 
+/nbproject/private/
+/build/

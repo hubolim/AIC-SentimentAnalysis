@@ -5,7 +5,6 @@
  */
 package at.tuwien.aic.preprocessing;
 
-import org.tartarus.snowball.ext.englishStemmer;
 import org.tartarus.snowball.ext.porterStemmer;
 
 /**
