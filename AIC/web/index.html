@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/css-spinners/css/spinners.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">AIC - Twitter sentiment analysis</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li id="tasks">
+                            <a href="#tasks">Tasks</a>
+                        </li>
+                        <li id="subscribe">
+                            <a href="#subscribe">Add subscription</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#logout" id="logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+
+        <div class="content"></div>
+    </div>
+    <div class="overlay opaque">
+        <div class="cell">
+            <div class="card">
+                <span class="ball">Loading&#8230;</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/handlebars/handlebars.js"></script>
+    <script src="js/prefixfree.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

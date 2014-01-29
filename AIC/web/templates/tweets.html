@@ -1,0 +1,9 @@
+<h1>Tweets for {{topic}} - {{value}}%
+    <small>(positive: {{positive}} - neutral: {{neutral}} - negative: {{negative}})</small>
+</h1>
+<dl class="dl-horizontal">
+    {{#each tweets}}
+    <dt>{{value}}</dt>
+    <dd>{{text}}</dd>
+    {{/each}}
+</dl>

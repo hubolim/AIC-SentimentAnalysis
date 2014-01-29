@@ -1,0 +1,11 @@
+<h1>Query topic "{{topic}}"</h1>
+<ol>
+    {{#each configurations}}
+    <li>
+        <label>
+            <input type="radio" name="config" value="{{i}}" class="hidden">{{name}}
+        </label>
+    </li>
+    {{/each}}
+</ol>
+<button class="btn btn-primary btn-tweets" id="{{id}}">Use the selected configuration</button>

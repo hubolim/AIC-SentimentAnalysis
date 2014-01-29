@@ -1,0 +1,12 @@
+<h1>Subscriptions</h1>
+{{#each subscriptions}}
+<button class="btn btn-default pull-right btn-query" id="query-{{id}}" data-topic="{{join topic}}">Query</button>
+<h3>{{join topic}} ({{count}}) -
+    <small>{{progress}}% (started at {{startTime}} ends at {{runUntil}})</small>
+</h3>
+<div class="progress">
+    <div class="progress-bar" style="width: {{progress}}%">
+        <span class="sr-only">{{progress}}% complete</span>
+    </div>
+</div>
+{{/each}}

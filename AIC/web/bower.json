@@ -1,0 +1,19 @@
+{
+  "name": "AIC",
+  "version": "0.0.1",
+  "authors": [
+    "Klaus Harrer <e1027822@student.tuwien.ac.at>"
+  ],
+  "description": "a web interface for the sentiment analysis project by Benjamin Fraller, Klaus Harrer and Oliver Hubmer",
+  "main": "css/main.css",
+  "license": "MIT",
+  "homepage": "aic.hakla.at",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
