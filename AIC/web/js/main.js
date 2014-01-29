@@ -254,7 +254,7 @@ $(function() {
     }).on("click", ".btn-tweets", function(e) {
         e.preventDefault();
 
-        if ($("input[name=config]:checked").val() != undefined) {
+        if ($("input[name=config]:checked").val() != undefined && $("input[name=config]:checked").val() != 4) {
             showOverlay();
 
             rest.query.token(token);
@@ -268,7 +268,7 @@ $(function() {
                 load("tweets");
             });
         } else {
-            alert("You have to select a configuration!");
+            alert("You have to select a configuration and not the configuration number 4 - it isn't working right now!");
         }
     });
 
