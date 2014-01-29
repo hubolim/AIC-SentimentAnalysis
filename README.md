@@ -24,7 +24,7 @@ To start the program do the following steps:
 
 ### Windows
 
-1. install.sh
-2. start-mongo.sh
-3. start-server.sh
+1. install.bat
+2. start-mongo.bat
+3. start-server.bat
 4. open the [webinterface](http://localhost:8080/) in a browser
