@@ -268,7 +268,7 @@ $(function() {
                 load("tweets");
             });
         } else {
-            alert("You have to select a configuration and not the configuration number 4 - it isn't working right now!");
+            alert("You have to select a configuration and not the configuration number 5 - it isn't working right now!");
         }
     });
 
